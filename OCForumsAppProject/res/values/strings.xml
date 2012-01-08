@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, OCForumsAppActivity!</string>
+    <string name="app_name">OCForumsAppProject</string>
+	<string name="first">&lt;&lt;</string>
+	<string name="previous">&lt;</string>
+	<string name="last">&gt;&gt;</string>
+	<string name="next">&gt;</string>
+	<string name="forumicondescription">OCForums thread icon</string>
+</resources>
