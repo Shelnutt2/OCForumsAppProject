@@ -1,0 +1,19 @@
+This Application is released under the terms of the gpl v2 or newer.
+OCForums, overclockers.com and any associated material and terms are
+copyrighted and trademarked by their respective owners (iNet).
+
+This project is designed to be a native application for android to
+browse overclockers.com/forums . It's designed around fetching and
+parsing the html content of the forums to render it in a quicker
+and more efficient form. This is not meant as a full replacement
+for the mobile site and it a small hobby project.
+
+To build it simply:
+1) clone the repository
+git clone git://github.com/Shelnutt2/OCForumsAppProject.git
+2) Import into eclipse
+3) Apk will be in the bin directory, it builds automatically.
+
+To install on device:
+Simply move the apk to the device and open it to install it.
+  
