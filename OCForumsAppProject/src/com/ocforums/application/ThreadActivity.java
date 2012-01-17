@@ -304,10 +304,14 @@ public class ThreadActivity extends Activity{
             //LayoutInflater inflater = LayoutInflater.from(ThreadActivity.this);
             ListView listview = (ListView) findViewById(R.id.listView3);
             //ViewGroup header = (ViewGroup)inflater.inflate(R.layout.header, listview, false);
-            View header = (View)getLayoutInflater().inflate(R.layout.header,null);
+            //View header = (View)getLayoutInflater().inflate(R.layout.header,listview);
+            LayoutInflater inflater = getLayoutInflater();
+            ViewGroup header = (ViewGroup)inflater.inflate(R.layout.header, listview, false);
+            listview.addHeaderView(header, null, false);
+
 
             Log.i("Adding:","listview");
-            listview.addHeaderView(header);
+            //listview.addHeaderView(header);
             listview.setAdapter(new CustomListView.MyCustomAdapter2(ThreadActivity.this, R.layout.row2, output));
             //listview.setAdapter(new ArrayAdapter<String>(ThreadActivity.this, R.layout.row2 , output));
            /* mAdapter = new MyCustomAdapter();
