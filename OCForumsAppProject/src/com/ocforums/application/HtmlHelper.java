@@ -193,19 +193,16 @@ public class HtmlHelper {
         return linkList;
     }
     
-    List<TagNode> getThreadUrl(String CSSClassname)
+    List<TagNode> getThreadUrl()
     {
         List<TagNode> linkList = new ArrayList<TagNode>();
 
-        TagNode linkElements[] = rootNode.getElementsByName("td", true);
+        TagNode linkElements[] = rootNode.getElementsByName("fb:like", true);
         for (int i = 0; linkElements != null && i < linkElements.length; i++)
         {
-            String classType = linkElements[i].getAttributeByName("title");
             
-            if (classType != null && classType.matches(".*"+CSSClassname+".*"))
-            {
                 linkList.add(linkElements[i]);
-            }
+            
         }
 
         return linkList;

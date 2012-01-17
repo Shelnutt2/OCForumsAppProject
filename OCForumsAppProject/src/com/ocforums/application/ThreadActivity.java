@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-public class ThreadActivity extends Activity implements View.OnClickListener{
+public class ThreadActivity extends Activity{
 
     List<String> foutput = new ArrayList<String>();
     List<List<String>> foutput2 = new ArrayList<List<String>>();
@@ -63,25 +63,29 @@ public class ThreadActivity extends Activity implements View.OnClickListener{
         pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
         new ParseThread().execute(shurl);
         Log.i("where ami?","back from execution");
-        setContentView(R.layout.main);
+        setContentView(R.layout.header);
         
         
         //addListenerOnButton();
 
 
-        
+        Log.i("Adding","Button Listeners");
+		Log.i("view id lpage",Integer.toString(R.id.LastPage));
+		Log.i("view id fpage",Integer.toString(R.id.FirstPage));
+		Log.i("view id npage",Integer.toString(R.id.NextPage));
+		Log.i("view id ppage",Integer.toString(R.id.PreviousPage));
         Button fbutton = (Button) findViewById(R.id.FirstPage);
-        fbutton.setOnClickListener(this);
+        //fbutton.setOnClickListener(onclick);
         Button lbutton = (Button) findViewById(R.id.LastPage);
-        lbutton.setOnClickListener(this);
+        //lbutton.setOnClickListener(this);
         Button pbutton = (Button) findViewById(R.id.NextPage);
-        pbutton.setOnClickListener(this);
+        //pbutton.setOnClickListener(this);
         Button nbutton = (Button) findViewById(R.id.PreviousPage);
-        nbutton.setOnClickListener(this);
+        //nbutton.setOnClickListener(this);
 
   
         
-      /*  fbutton.setOnClickListener(new OnClickListener(){
+        fbutton.setOnClickListener(new OnClickListener(){
     	    public void onClick(View view) {
 				String shurl = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page=1";
 		        Log.i("url", shurl);
@@ -89,7 +93,43 @@ public class ThreadActivity extends Activity implements View.OnClickListener{
 		        new ParseThread().execute(shurl);
     	    }
 			
-        });*/
+        });
+        
+        lbutton.setOnClickListener(new OnClickListener(){
+    	    public void onClick(View view) {
+		        String shurl = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(lpage);
+		        Log.i("url", shurl);
+		        pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+		        new ParseThread().execute(shurl);
+    	    }
+			
+        });
+        
+        pbutton.setOnClickListener(new OnClickListener(){
+    	    public void onClick(View view) {
+				if(cpage != 1){
+					   String shurl4 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(cpage-1);
+			           Log.i("url", shurl4);
+			           pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+			           new ParseThread().execute(shurl4);
+			
+					}
+    	    }
+			
+        });
+        
+        nbutton.setOnClickListener(new OnClickListener(){
+    	    public void onClick(View view) {
+				if(cpage != lpage){
+					   String shurl3 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(cpage+1);
+			           Log.i("url", shurl3);
+			           pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+			           new ParseThread().execute(shurl3);
+			
+					}
+    	    }
+			
+        });
          
     }
     
@@ -137,6 +177,7 @@ public class ThreadActivity extends Activity implements View.OnClickListener{
             List<String> usernamecolor = new ArrayList<String>();
             List<String> datepost = new ArrayList<String>();
             List<String> messagepost = new ArrayList<String>();
+            List<String> hrefs = new ArrayList<String>();
             String fontss = new String();
 
             try
@@ -144,7 +185,7 @@ public class ThreadActivity extends Activity implements View.OnClickListener{
                 HtmlHelper hh = new HtmlHelper(new String(arg[0]));
                 List<TagNode> links = hh.getPost("post");
                 List<TagNode> linksp = hh.getPage("font-weight:normal");
-                List<TagNode> linkstu = hh.getThreadUrl("showthread.php?t=");
+                List<TagNode> linkstu = hh.getThreadUrl();
                 Log.i("links",Integer.toString(links.size()));
                 for (Iterator<TagNode> iterator = links.iterator(); iterator.hasNext();)
                 {
@@ -221,12 +262,19 @@ public class ThreadActivity extends Activity implements View.OnClickListener{
                     
                     
                 }
+                for (Iterator<TagNode> iterator = linkstu.iterator(); iterator.hasNext();)
+                {
+                	TagNode divElement = (TagNode) iterator.next();
+                	Log.i("turl",divElement.getAttributeByName("href").toString()); 
+					hrefs.add(divElement.getAttributeByName("href").toString());	
+                	
+                }
                 String tpage = linksp.get(0).getText().toString().replaceAll("Page ", "");
                 String[] values = tpage.split(" of ");
                 cpage = Integer.parseInt(values[0]);
                 lpage = Integer.parseInt(values[1]);
+                turl = hrefs.get(0).replaceAll("http://www.overclockers.com/forums/","");
                 
-                turl = linkstu.get(0).getAttributeByName("title").toString();
                 Log.i("current page #",Integer.toString(cpage));
                 Log.i("current page #",Integer.toString(lpage));
                 Log.i("Thread url",turl);
@@ -253,11 +301,13 @@ public class ThreadActivity extends Activity implements View.OnClickListener{
             //output2d.size();
             //Log.i("size",Integer.toString(output2d.get(0).size()));
             Log.i("Adding:","Header");
-            LayoutInflater inflater = LayoutInflater.from(ThreadActivity.this);
+            //LayoutInflater inflater = LayoutInflater.from(ThreadActivity.this);
             ListView listview = (ListView) findViewById(R.id.listView3);
-            ViewGroup header = (ViewGroup)inflater.inflate(R.layout.header, listview, false);
+            //ViewGroup header = (ViewGroup)inflater.inflate(R.layout.header, listview, false);
+            View header = (View)getLayoutInflater().inflate(R.layout.header,null);
+
             Log.i("Adding:","listview");
-            listview.addHeaderView(header, null, false);
+            listview.addHeaderView(header);
             listview.setAdapter(new CustomListView.MyCustomAdapter2(ThreadActivity.this, R.layout.row2, output));
             //listview.setAdapter(new ArrayAdapter<String>(ThreadActivity.this, R.layout.row2 , output));
            /* mAdapter = new MyCustomAdapter();
