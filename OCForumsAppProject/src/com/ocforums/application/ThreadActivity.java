@@ -55,7 +55,7 @@ public class ThreadActivity extends Activity{
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.main);
+        setContentView(R.layout.main);
         
         String qhurl = CustomListView.gethurl();
         String shurl = "http://www.overclockers.com/forums/"+qhurl.replaceFirst("p=", "styleid=31&p=");
@@ -170,9 +170,9 @@ public class ThreadActivity extends Activity{
     }
     
     public class ParseThread extends AsyncTask<String, Void, List<List<String>>> {
-
+    	List<List<String>> combined2d = new ArrayList<List<String>>();
         protected List<List<String>> doInBackground(String... arg) {
-        	List<List<String>> combined2d = new ArrayList<List<String>>();
+
             List<String> usernamepost = new ArrayList<String>();
             List<String> usernamecolor = new ArrayList<String>();
             List<String> datepost = new ArrayList<String>();
@@ -269,10 +269,17 @@ public class ThreadActivity extends Activity{
 					hrefs.add(divElement.getAttributeByName("href").toString());	
                 	
                 }
-                String tpage = linksp.get(0).getText().toString().replaceAll("Page ", "");
-                String[] values = tpage.split(" of ");
-                cpage = Integer.parseInt(values[0]);
-                lpage = Integer.parseInt(values[1]);
+
+                if(linksp.size() > 1){
+                    String tpage = linksp.get(0).getText().toString().replaceAll("Page ", "");
+                    String[] values = tpage.split(" of ");
+                    cpage = Integer.parseInt(values[0]);
+                    lpage = Integer.parseInt(values[1]);
+                }
+                else{
+                	cpage = 1;
+                	lpage = 1;
+                }
                 turl = hrefs.get(0).replaceAll("http://www.overclockers.com/forums/","");
                 
                 Log.i("current page #",Integer.toString(cpage));
@@ -298,8 +305,11 @@ public class ThreadActivity extends Activity{
         protected void onPostExecute(List<List<String>> output) {
 
             pd.dismiss();
+            
             //output2d.size();
-            //Log.i("size",Integer.toString(output2d.get(0).size()));
+            setContentView(R.layout.main);
+            Log.i("size",Integer.toString(output.size()));
+            Log.i("size",Integer.toString(combined2d.size()));
             Log.i("Adding:","Header");
             //LayoutInflater inflater = LayoutInflater.from(ThreadActivity.this);
             ListView listview = (ListView) findViewById(R.id.listView3);
