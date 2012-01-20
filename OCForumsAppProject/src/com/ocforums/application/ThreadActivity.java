@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-public class ThreadActivity extends Activity{
+public class ThreadActivity extends Activity implements OnClickListener{
 
     List<String> foutput = new ArrayList<String>();
     List<List<String>> foutput2 = new ArrayList<List<String>>();
@@ -52,6 +52,89 @@ public class ThreadActivity extends Activity{
 	    listview.setAdapter(new CustomListView.MyCustomAdapter2(ThreadActivity.this, R.layout.row2, foutput2));
 	    findViewById(R.id.listView3).setVisibility(View.VISIBLE);
 	}
+	
+	 public void lbutton(){ 
+	        String shurl = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(lpage);
+	        Log.i("url", shurl);
+	        pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+	        new ParseThread().execute(shurl);
+
+	       }
+
+	 public void fbutton(){ 
+			String shurl2 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page=1";
+	        Log.i("url", shurl2);
+	        pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+	        new ParseThread().execute(shurl2);
+	 	}
+	 
+	 public void nbutton(){ 
+			if(cpage != lpage){
+				   String shurl3 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(cpage+1);
+		           Log.i("url", shurl3);
+		           pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+		           new ParseThread().execute(shurl3);
+		
+				}
+	 	}
+	 public void pbutton(){ 
+			if(cpage != 1){
+				   String shurl4 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(cpage-1);
+		           Log.i("url", shurl4);
+		           pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+		           new ParseThread().execute(shurl4);
+		
+				}
+	 }
+	 
+	 public void onClick(View v) {
+			Log.i("view clicked",Integer.toString(v.getId()));
+			Log.i("view id lpage",Integer.toString(R.id.LastPage));
+			Log.i("view id fpage",Integer.toString(R.id.FirstPage));
+			Log.i("view id npage",Integer.toString(R.id.NextPage));
+			Log.i("view id ppage",Integer.toString(R.id.PreviousPage));
+			
+	    	  switch(v.getId()){
+
+	    	  case R.id.LastPage: 
+			        String shurl = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(lpage);
+			        Log.i("url", shurl);
+			        pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+			        new ParseThread().execute(shurl);
+
+	    	       break;
+
+	    	  case R.id.FirstPage: 
+					String shurl2 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page=1";
+			        Log.i("url", shurl2);
+			        pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+			        new ParseThread().execute(shurl2);
+	    	       break;
+	    	  case R.id.NextPage:
+					if(cpage != lpage){
+						   String shurl3 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(cpage+1);
+				           Log.i("url", shurl3);
+				           pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+				           new ParseThread().execute(shurl3);
+				
+						}
+	    		  break;
+	    	  case R.id.PreviousPage:
+					if(cpage != 1){
+						   String shurl4 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(cpage-1);
+				           Log.i("url", shurl4);
+				           Toast.makeText(getApplicationContext(), "Confused?", Toast.LENGTH_LONG).show();
+				           pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+				           new ParseThread().execute(shurl4);
+				
+						}
+	    		  break;
+	    	  }
+			        
+
+		
+			  
+		}
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +143,7 @@ public class ThreadActivity extends Activity{
         String qhurl = CustomListView.gethurl();
         String shurl = "http://www.overclockers.com/forums/"+qhurl.replaceFirst("p=", "styleid=31&p=");
         Log.i("url", shurl);
+        Log.i("where ami?","going");
         pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
         new ParseThread().execute(shurl);
         Log.i("where ami?","back from execution");
@@ -84,12 +168,16 @@ public class ThreadActivity extends Activity{
         //nbutton.setOnClickListener(this);
 
   
-        
+        fbutton.setOnClickListener(this);
+        lbutton.setOnClickListener(this);
+        pbutton.setOnClickListener(this);
+
         fbutton.setOnClickListener(new OnClickListener(){
     	    public void onClick(View view) {
 				String shurl = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page=1";
 		        Log.i("url", shurl);
 		        pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
+		        Toast.makeText(getApplicationContext(), "Confused?", Toast.LENGTH_LONG).show();
 		        new ParseThread().execute(shurl);
     	    }
 			
@@ -186,28 +274,28 @@ public class ThreadActivity extends Activity{
                 List<TagNode> links = hh.getPost("post");
                 List<TagNode> linksp = hh.getPage("font-weight:normal");
                 List<TagNode> linkstu = hh.getThreadUrl();
-                Log.i("links",Integer.toString(links.size()));
+                //Log.i("links",Integer.toString(links.size()));
                 for (Iterator<TagNode> iterator = links.iterator(); iterator.hasNext();)
                 {
                   TagNode divElement = (TagNode) iterator.next();
                   TagNode StrongElements[] = divElement.getElementsByName("strong", true);
-                  Log.i("StrongElements",Integer.toString(StrongElements.length));
-                  Log.i("Checking for:","name and color");
+                 // Log.i("StrongElements",Integer.toString(StrongElements.length));
+                  //Log.i("Checking for:","name and color");
                   for (int j = 0; StrongElements != null && j < StrongElements.length; j++)
                   {
                     TagNode linkElements[] = StrongElements[j].getElementsByName("a", true);
-                    Log.i("LinkElements",Integer.toString(linkElements.length));
+                   // Log.i("LinkElements",Integer.toString(linkElements.length));
                     for (int i = 0; linkElements != null && linkElements.length > 0 && i < linkElements.length; i++)
                     {
                         String classType = linkElements[i].getAttributeByName("class"); 
-                        Log.i("class",linkElements[i].getAttributeByName("class"));
+                       // Log.i("class",linkElements[i].getAttributeByName("class"));
                         if (classType != null && classType.equals("bigusername"))
                         {
-                        	Log.i("Find Any usernames?","MAYBE!");
+                        	//Log.i("Find Any usernames?","MAYBE!");
                         	usernamepost.add(linkElements[i].getText().toString());
                         
                         TagNode fonts[] = linkElements[i].getElementsByName("font", true);
-                        Log.i("fonts",Integer.toString(fonts.length));
+                        //Log.i("fonts",Integer.toString(fonts.length));
                         if(fonts.length > 0){
                         for (int k = 0; fonts != null && k < fonts.length; k++){
                         	fontss = fonts[k].getAttributeByName("color");
@@ -225,7 +313,7 @@ public class ThreadActivity extends Activity{
                     	}
                       }
                         else{
-                        Log.i("Find Any usernames?","Nope");	
+                      //  Log.i("Find Any usernames?","Nope");	
                         }
                       
                 }
@@ -233,7 +321,7 @@ public class ThreadActivity extends Activity{
                     //output.add(divElement.getText().toString());
                     //hrefs.add(divElement.getAttributeByName("href").toString());
                     TagNode linkElements2[] = divElement.getElementsByName("td", true);
-                    Log.i("Checking for:","date");
+                    //Log.i("Checking for:","date");
                     //for (int i = 0; linkElements2 != null && i < linkElements2.length; i++)
                     {
                         String classType = linkElements2[0].getAttributeByName("class");
@@ -241,14 +329,14 @@ public class ThreadActivity extends Activity{
                         if (classType != null && classType.matches("thead"))
                         {
                         	//if(linkElements2[0].getText().toString().matches(".*:.*")){
-                           Log.i("Date:","FOUND!");
+                         //  Log.i("Date:","FOUND!");
                            datepost.add(linkElements2[0].getText().toString().replaceAll("\\n", ""));
-                           Log.i("date found:",linkElements2[0].getText().toString().replaceAll("\\n", ""));
+                         //  Log.i("date found:",linkElements2[0].getText().toString().replaceAll("\\n", ""));
                         	//}
                         }
                     }
                     TagNode linkElements3[] = divElement.getElementsByName("div", true);
-                    Log.i("Checking for:","message");
+                   // Log.i("Checking for:","message");
                     for (int i = 0; linkElements3 != null && i < linkElements3.length; i++)
                     {
                         String classType = linkElements3[i].getAttributeByName("class");
@@ -265,7 +353,7 @@ public class ThreadActivity extends Activity{
                 for (Iterator<TagNode> iterator = linkstu.iterator(); iterator.hasNext();)
                 {
                 	TagNode divElement = (TagNode) iterator.next();
-                	Log.i("turl",divElement.getAttributeByName("href").toString()); 
+                	//Log.i("turl",divElement.getAttributeByName("href").toString()); 
 					hrefs.add(divElement.getAttributeByName("href").toString());	
                 	
                 }
@@ -335,52 +423,6 @@ public class ThreadActivity extends Activity{
         }
         }
 
-	public void onClick(View v) {
-		Log.i("view clicked",Integer.toString(v.getId()));
-		Log.i("view id lpage",Integer.toString(R.id.LastPage));
-		Log.i("view id fpage",Integer.toString(R.id.FirstPage));
-		Log.i("view id npage",Integer.toString(R.id.NextPage));
-		Log.i("view id ppage",Integer.toString(R.id.PreviousPage));
-		
-    	  switch(v.getId()){
-
-    	  case R.id.LastPage: 
-		        String shurl = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(lpage);
-		        Log.i("url", shurl);
-		        pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
-		        new ParseThread().execute(shurl);
-
-    	       break;
-
-    	  case R.id.FirstPage: 
-				String shurl2 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page=1";
-		        Log.i("url", shurl2);
-		        pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
-		        new ParseThread().execute(shurl2);
-    	       break;
-    	  case R.id.NextPage:
-				if(cpage != lpage){
-					   String shurl3 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(cpage+1);
-			           Log.i("url", shurl3);
-			           pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
-			           new ParseThread().execute(shurl3);
-			
-					}
-    		  break;
-    	  case R.id.PreviousPage:
-				if(cpage != 1){
-					   String shurl4 = "http://www.overclockers.com/forums/"+turl+"&styleid=31"+"&page="+Integer.toString(cpage-1);
-			           Log.i("url", shurl4);
-			           pd = ProgressDialog.show(ThreadActivity.this, "Working...", "request to server", true, false);
-			           new ParseThread().execute(shurl4);
-			
-					}
-    		  break;
-    	  }
-		        
-
 	
-		  
-	}
 }
 
