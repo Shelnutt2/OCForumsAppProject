@@ -57,6 +57,16 @@ public class BothActivity extends Activity{
 	    MyCustomAdapter adapter = new CustomListView.MyCustomAdapter(BothActivity.this, R.layout.row , foutput2);
 	    listview.setAdapter(adapter);
 	}
+	
+	@Override
+	protected void onResume() {
+	    super.onRestart();
+	    Log.i("size of foupout2",Integer.toString(foutput2.size()));
+	    findViewById(R.id.listView1).setVisibility(View.VISIBLE);
+	    ListView listview = (ListView) findViewById(R.id.listView1);
+	    MyCustomAdapter adapter = new CustomListView.MyCustomAdapter(BothActivity.this, R.layout.row , foutput2);
+	    listview.setAdapter(adapter);
+	}
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -246,7 +256,9 @@ public class BothActivity extends Activity{
             //listview.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.row,R.id.forumlist , testing));
            //lv.makelistview(foutput, BothActivity.this);
             	 
-                foutput2 = foutput;
+               if(foutput2.size() == 0){
+            	   foutput2 = foutput;
+               }
                
                 Log.i("size of foutput",Integer.toString(foutput.size()));
                 Log.i("size of foutput2",Integer.toString(foutput2.size()));
